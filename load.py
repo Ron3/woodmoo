@@ -5,32 +5,29 @@ Created on 2015-10-23
 @author: lamter
 '''
 
+import zlib
 from encrypt import *
-from zipdata import ZipData
 
 
 # 块长度
 BLOCK_SIZE = 1024
 
-def loadInt32(_socket):
+def loadInt32(AES_KEY, _socket):
     """
     以 int32 来解包数据
     :return: json
     """
-    _json = ''
-
-    ''' 获取长度 '''
-
+    # 获取长度
     d = _socket.recv(4)
 
-    ''' 获得数据长度 '''
+    # 获得数据长度
     length = getDataLength(d)
 
     if length == 0:
-        return _json
+        return ''
 
-    ''' 接受完数据 '''
-    buffers = ''
+    # 接受完数据
+    cryptData = ''
     while length > 0:
         if length >= BLOCK_SIZE:
             s = BLOCK_SIZE
@@ -38,19 +35,16 @@ def loadInt32(_socket):
             s = length
 
         buff = _socket.recv(s)
-        buffers += buff
+        cryptData += buff
         length -= len(buff)
 
-    ''' 解密 '''
-    cryptData = BPAES.aes128_decrypt(buffers)
+    # 解压
+    decryptData = aes128_decrypt(AES_KEY, cryptData)
 
-    unzipData = BPZipData.unzip_data(cryptData)
+    # 加压
+    unzipData = zlib.decompress(decryptData)
 
-    ''' 解析json '''
-    data = json.loads(unzipData)
-
-    #print "data->", data
-    return data
+    return unzipData
 
 
 from struct import pack, unpack
