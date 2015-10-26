@@ -57,7 +57,6 @@ def aes128_decrypt(AES_KEY, _data):
     :param requestData:
     :return:
     """
-
     data = getAesByKey(AES_KEY).decrypt(_data)
     rawDataLength = len(data)
 

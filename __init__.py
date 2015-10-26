@@ -7,8 +7,10 @@ Created on 2015-10-23
 
 
 from load import loadInt32
+from dump import dumpInt32
 
 
 __all__ = [
     'loadInt32',
+    'dumpInt32'
 ]

@@ -7,7 +7,7 @@ Created on 2015-10-23
 
 import zlib
 from encrypt import *
-
+from intn import getDataLength
 
 # 块长度
 BLOCK_SIZE = 1024
@@ -38,21 +38,10 @@ def loadInt32(AES_KEY, _socket):
         cryptData += buff
         length -= len(buff)
 
-    # 解压
+    # 解密
     decryptData = aes128_decrypt(AES_KEY, cryptData)
-
-    # 加压
+    # 解压
     unzipData = zlib.decompress(decryptData)
 
     return unzipData
 
-
-from struct import pack, unpack
-STRUCT_FORMAT = "!I"
-
-def getDataLength(d):
-    if d:
-        length, = unpack(STRUCT_FORMAT, d)
-        return length
-    else:
-        return 0
