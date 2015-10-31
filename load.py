@@ -12,10 +12,34 @@ from intn import getDataLength
 # 块长度
 BLOCK_SIZE = 1024
 
-def loadInt32(AES_KEY, _socket):
+def loadInt32(_socket, AES_KEY=None, unzip=False):
     """
     以 int32 来解包数据
-    :return: json
+    :param _socket:
+    :param AES_KEY:
+    :param zipLevel:
+    :return:
+    """
+    # 收包
+    data = _loadInt32(_socket)
+
+    if AES_KEY:
+        # 解密
+        data = aes128_decrypt(AES_KEY, data)
+
+    if unzip:
+        # 解压
+        data = zlib.decompress(data)
+
+    return data
+
+
+
+def _loadInt32(_socket):
+    """
+    以 int32 位收包
+    :param _socket:
+    :return:
     """
     # 获取长度
     d = _socket.recv(4)
@@ -27,7 +51,7 @@ def loadInt32(AES_KEY, _socket):
         return ''
 
     # 接受完数据
-    cryptData = ''
+    data = ''
     while length > 0:
         if length >= BLOCK_SIZE:
             s = BLOCK_SIZE
@@ -35,13 +59,7 @@ def loadInt32(AES_KEY, _socket):
             s = length
 
         buff = _socket.recv(s)
-        cryptData += buff
+        data += buff
         length -= len(buff)
 
-    # 解密
-    decryptData = aes128_decrypt(AES_KEY, cryptData)
-    # 解压
-    unzipData = zlib.decompress(decryptData)
-
-    return unzipData
-
+    return data
