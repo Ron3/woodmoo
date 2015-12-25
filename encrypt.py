@@ -57,7 +57,11 @@ def aes128_decrypt(AES_KEY, _data):
     :param requestData:
     :return:
     """
-    data = getAesByKey(AES_KEY).decrypt(_data)
+    # 秘钥实例
+    newAes = getAesByKey(AES_KEY)
+
+    # 解密
+    data = newAes.decrypt(_data)
     rawDataLength = len(data)
 
     # 剔除掉数据后面的补齐位
