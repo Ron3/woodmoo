@@ -10,7 +10,7 @@ from encrypt import *
 from intn import int32Head
 
 
-def dumpInt32(_json, AES_KEY):
+def dumpInt32(_json, AES_KEY=None):
     """
     压缩加密
     :param _json:
@@ -22,7 +22,10 @@ def dumpInt32(_json, AES_KEY):
     zipData = zlib.compress(_json, 6)
 
     # 加密
-    encryptData = aes128_encrypt(AES_KEY, zipData)
+    if AES_KEY:
+        encryptData = aes128_encrypt(AES_KEY, zipData)
+    else:
+        encryptData = zipData
 
     # Int32位
     int32Data = int32Head(encryptData) + encryptData
