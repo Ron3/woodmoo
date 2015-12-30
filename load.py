@@ -12,7 +12,7 @@ from intn import getDataLength
 # 块长度
 BLOCK_SIZE = 1024
 
-def loadInt32(_socket, AES_KEY=None, unzip=False):
+def loadInt32(_socket, AES_KEY=None, unzip=True):
     """
     以 int32 来解包数据
     :param _socket:
