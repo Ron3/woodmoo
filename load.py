@@ -23,11 +23,11 @@ def loadInt32(_socket, AES_KEY=None, unzip=True):
     # 收包
     data = _loadInt32(_socket)
 
-    if AES_KEY:
+    if data and AES_KEY:
         # 解密
         data = aes128_decrypt(AES_KEY, data)
 
-    if unzip:
+    if data and unzip:
         # 解压
         data = zlib.decompress(data)
 
